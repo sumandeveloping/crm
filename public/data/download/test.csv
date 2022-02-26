@@ -1,0 +1,5 @@
+_id,dupId,title,firstName,lastName,email,leadRating,city,state,zipcode,createdAt,__v
+6217452ae58249fa75cea30e,1f256cec-f290-403e-aa1e-708e359e55f6,Test 1,Dipak,Patil,dipak123@gmail.com,4.5,Pune,0,455689,2022-02-24T08:43:02.768Z,0
+6217452ae58249fa75cea30f,1f256cec-f290-403e-aa1e-708e359e55f6,Test 3,Ramesh,Patil,ramesh3564@gmail.com,4.5,Nagpur,0,132374,2022-02-24T08:43:02.768Z,0
+6217452ae58249fa75cea310,1f256cec-f290-403e-aa1e-708e359e55f6,Test 2,Kishor,Patil,kishor4656@gmail.com,4.5,Mumbai,0,788996,2022-02-24T08:43:02.768Z,0
+6217452ae58249fa75cea311,1f256cec-f290-403e-aa1e-708e359e55f6,Test 4,Krushna,Patil,krushna669888@gmail.com,4.5,Nashik,0,4785636,2022-02-24T08:43:02.768Z,0
