@@ -12,4 +12,6 @@
 10. When you upload a new csv file then new uploaded csv file is saved inside 'public/data/uploads' folder.
 11. When you download csv file containing duplicates record,all duplicate records is saved to 'test.csv' file which is stored inside 'public/data/download' folder.
 12. I am also including postman collection button in this readme file below
-13. [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/32cacea2c954c3acace2?action=collection%2Fimport)
+13. Github private repo link: https://github.com/sumandeveloping/crm
+14. I have not uploaded this assignment to Heroku, so I am attaching the zip file in the mail
+15. [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/32cacea2c954c3acace2?action=collection%2Fimport)

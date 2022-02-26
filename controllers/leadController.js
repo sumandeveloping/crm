@@ -9,26 +9,6 @@ var url = require("url");
 const { path } = require("path");
 const cors = require("cors");
 
-//===== middleware functions ================
-// exports.checkID = async (req, res, next, id) => {
-//   const val = id || req.params.id;
-//   console.log("Hello from CheckID middleware 😍");
-//   console.log(val);
-
-//   const lead = await Lead.findById(val, (err, data) => {
-//     if (err) {
-//       return res.status(400).json({
-//         status: "Failed",
-//         message: "ID does not exist! 😪",
-//       });
-//     } else {
-//       console.log(lead);
-//       next();
-//     }
-//   });
-// };
-
-//==================================================================
 exports.getAllLeads = async (req, res) => {
   try {
     const leads = await Lead.find();
@@ -126,8 +106,6 @@ const storageFile = multer.diskStorage({
     cb(null, `${__dirname}/../public/data/uploads`);
   },
   filename: function (req, file, cb) {
-    // const uniqueFileName = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    // cb(null, file.fieldname + "-" + uniqueFileName);
     cb(null, file.fieldname + "-" + Date.now() + "-" + file.originalname);
   },
 });
@@ -178,12 +156,8 @@ exports.uploadToDB = async (req, res) => {
       })
       .on("end", () => {
         // Save to DB
-        /////////////////////
-        // console.log(csvData);
-        // console.log(csvEmail);
-        // console.log(duplicateEmails);
         // ** CHECK IF CSV FILE CONTAINS ANY DUPLICATE ENTRIES
-        console.log(`🤦‍♀️ Duplicates Entries 🤷‍♂️:  ${duplicateEmails.length}`);
+        //console.log(`Duplicates Entries:  ${duplicateEmails.length}`);
         //Removing duplicates leads from csvData array
         csvData.forEach((el) => {
           // 1. entries to upload to DB
@@ -196,9 +170,6 @@ exports.uploadToDB = async (req, res) => {
         console.log("================================");
         console.log(dataToEntry);
         console.log("================================");
-        // console.log(typeof duplicateEntries);
-        // console.log(duplicateEntries);
-        // console.log("================================");
         //Removing duplicate entries from 'duplicateEntries' array
         const setObj = new Set();
         let filterDuplicateArr = duplicateEntries.filter((el) => {
@@ -208,14 +179,9 @@ exports.uploadToDB = async (req, res) => {
         });
         console.log(filterDuplicateArr);
         console.log("================================");
-        // console.log(setObj);
-        // console.log("😍 Uploaded successfully 😅");
         // ** ===========================================
         // ** CHECK IF DATABASE CONTAINS ANY DUPLICATE ENTRIES
         // 3. show the response
-        //** alternatively */
-
-        // });
         const promiseArr = Promise.all(
           dataToEntry.map(async (data, index) => {
             let lead = await Lead.findOne({ email: data.email });
@@ -250,9 +216,6 @@ exports.uploadToDB = async (req, res) => {
             console.log(filterDuplicateArr);
             let duplicateArr = filterDuplicateArr.map((el, ind) => {
               el.dupId = ID;
-              // delete el._id;
-              // delete el.__v;
-              // delete el.createdAt;
               return el;
             });
 
@@ -263,12 +226,6 @@ exports.uploadToDB = async (req, res) => {
 
             console.log("||===================================||");
             console.log(duplicateArr);
-            // console.log(duplicateArr[0].dupId);
-            // console.log(duplicateArr[1].dupId);
-            // console.log(duplicateArr[2].dupId);
-            // console.log(duplicateArr[3].dupId);
-            // console.log(req.url); // bulk
-            // console.log(req.baseUrl); // /api/v1/leads
             let hostname = req.headers.host;
             console.log(hostname); // hostname = 'localhost:8000'
             res.status(200).json({
@@ -284,56 +241,9 @@ exports.uploadToDB = async (req, res) => {
           .catch((err) => {
             console.log(err);
           });
-
-        //console.log(promiseArr);
-        // Promise.all(promiseArr)
-        //   .then((resolve) => {
-        //     console.log(resolve);
-        //   })
-        //   .catch((err) => {
-        //     console.log(err);
-        //   });
         console.log("===================================");
         console.log("Final data to store into database!!! 💥");
-        //console.log(dataToEntry);
         console.log("===================================");
-        //insert to DATABASE
-        // if (dataToEntry.length || dataToEntry.length >= 1) {
-        //   Lead.insertMany(dataToEntry, { ordered: false })
-        //     .then((uploadedData) => {
-        //       console.log("😄😀 FINAL DATA Inserted! 😍😍");
-        //       console.log(uploadedData);
-        //       console.log(req.url); // bulk
-        //       console.log(req.baseUrl); // /api/v1/leads
-        //       let hostname = req.headers.host; // hostname = 'localhost:8000'
-        //       // let pathname = url.parse(req.url).pathname; // pathname = '/MyApp'
-        //       // console.log("http://" + hostname + pathname);
-        //       res.status(200).json({
-        //         status: "success",
-        //         created: uploadedData.length,
-        //         duplicates: filterDuplicateArr.length,
-        //         report: `${req.baseUrl}/reports/`,
-        //         data: {
-        //           uploadedData,
-        //         },
-        //       });
-        //     })
-        //     .catch((e) => {
-        //       console.log("ERROR - " + e.message);
-        //       console.log(e.insertedIds); //displays all ids of attempted inserts
-        //     });
-        // } else {
-        //   res.status(200).json({
-        //     status: "success",
-        //     created: 0,
-        //     msg: "There in nothing to store in DB!",
-        //     // duplicates: filterDuplicateArr.length,
-        //     report: `${req.baseUrl}/reports/`,
-        //     data: {
-        //       uploadedData: "",
-        //     },
-        //   });
-        // }
       });
 
     //** alternatively */
@@ -351,8 +261,6 @@ exports.downloadDuplicates = async (req, res) => {
   const ws = fs.createWriteStream(filepath);
   // * =========================
   let data = await Duplicate.find({ dupId: req.params.dupId });
-  //console.log(data);
-  //console.log(typeof data);
   data = JSON.parse(JSON.stringify(data));
   csv
     .write(data, { headers: true })
@@ -362,14 +270,6 @@ exports.downloadDuplicates = async (req, res) => {
       setTimeout(function () {
         res.download(filepath, "test.csv");
       }, 2000);
-
-      // res.setHeader("Content-Type", "text/csv");
-      // res.setHeader("Content-Disposition", `attachment; filename=test.csv`);
-      // res
-      //   .status(200)
-      //   .send(
-      //     `<a href='${filepath}' id='download-btn' download='test.csv'>Download File</a><script>document.getElementById('download-btn').click()</script>`
-      //   );
     })
     .pipe(ws);
 };
@@ -378,10 +278,6 @@ exports.downloadDuplicates = async (req, res) => {
 exports.aaa = async (req, res) => {
   let ids = JSON.parse(JSON.stringify(req.body.id));
   let data = JSON.parse(JSON.stringify(req.body.data));
-  // console.log(ids);
-  // console.log(typeof ids);
-  // console.log(data);
-  // console.log(typeof data);
 
   let promiseAll = Promise.all(
     ids.map(async (id) => {
@@ -402,7 +298,6 @@ exports.aaa = async (req, res) => {
   )
     .then((resolve) => {
       console.log(resolve);
-      // console.log(typeof resolve);
       res.status(404).json({
         status: "Success",
         modifiedData: resolve,
