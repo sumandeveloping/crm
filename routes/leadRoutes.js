@@ -10,7 +10,7 @@ router
   .get(leadController.getAllLeads)
   .post(leadController.createLead);
 
-router.patch("/bulk", leadController.aaa);
+router.patch("/bulk", leadController.bulkUpdate);
 
 router
   .route("/:id")

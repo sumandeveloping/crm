@@ -11,9 +11,13 @@ const cors = require("cors");
 
 exports.getAllLeads = async (req, res) => {
   try {
-    const leads = await Lead.find();
+    // console.log(req.query);
+    const page = req.query.page * 1 || 1;
+    const limit = req.query.limit * 1 || 2;
+    const skip = (page - 1) * limit; // (3-1) * 20
+
+    const leads = await Lead.find().skip(skip).limit(limit);
     const numOfLeads = await Lead.countDocuments();
-    // console.log(uuidv4());
     res.status(200).json({
       status: "success",
       numOfLeads,
@@ -275,7 +279,7 @@ exports.downloadDuplicates = async (req, res) => {
 };
 
 //BUlk update
-exports.aaa = async (req, res) => {
+exports.bulkUpdate = async (req, res) => {
   let ids = JSON.parse(JSON.stringify(req.body.id));
   let data = JSON.parse(JSON.stringify(req.body.data));
 
