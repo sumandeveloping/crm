@@ -1,4 +1,5 @@
 const Lead = require("../models/leadModel");
+const db = require("../connection");
 const Duplicate = require("../models/duplicateModel");
 const { v4: uuidv4 } = require("uuid");
 const multer = require("multer");
@@ -16,7 +17,15 @@ exports.getAllLeads = async (req, res) => {
     const limit = req.query.limit * 1 || 2;
     const skip = (page - 1) * limit; // (3-1) * 20
 
-    const leads = await Lead.find().skip(skip).limit(limit);
+    // const leads = await Lead.find().skip(skip).limit(limit);
+    let query = db.query("SELECT * FROM leads", (err, rows, fields) => {
+      if (err) throw err;
+      res.status(200).json({
+        status: "success",
+        numOfLeads: rows.length,
+        leads: rows,
+      });
+    });
     const numOfLeads = await Lead.countDocuments();
     res.status(200).json({
       status: "success",
@@ -287,6 +296,7 @@ exports.bulkUpdate = async (req, res) => {
     ids.map(async (id) => {
       try {
         let lead = await Lead.findByIdAndUpdate(id, data, { new: true });
+
         if (lead) {
           return `Lead having ID (${id}) is updated! 🙂`;
         } else if (lead === null || lead === undefined) {

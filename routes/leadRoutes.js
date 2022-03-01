@@ -22,5 +22,5 @@ router
   .route("/bulk")
   .post(leadController.upload.single("file"), leadController.uploadToDB);
 
-router.route("/reports/:dupId").get(leadController.downloadDuplicates);
+router.route("/reports/duplicates").get(leadController.downloadDuplicates);
 module.exports = router;
